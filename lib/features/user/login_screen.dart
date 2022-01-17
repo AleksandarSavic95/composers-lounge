@@ -40,9 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 4),
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
-                if (state is AuthLoaded) {
-                  context.read<ChannelsCubit>().loadChannels(state.user);
-                  Navigator.of(context).pushReplacementNamed(RouteNames.channelList);
+                if (state is AuthLoaded && state.user != null) {
+                  context.read<ChannelsCubit>().loadChannels(state.user!);
+                  Navigator.of(context).pushNamed(RouteNames.channelList);
                 }
                 if (state is AuthError) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));

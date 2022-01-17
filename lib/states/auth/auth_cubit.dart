@@ -19,4 +19,9 @@ class AuthCubit extends Cubit<AuthState> {
     }
     emit(AuthLoaded(user));
   }
+
+  void logOut() {
+    // _authService.logOut((state as AuthLoaded).user); // ?
+    emit(const AuthLoaded(null));
+  }
 }

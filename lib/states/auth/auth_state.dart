@@ -17,7 +17,7 @@ class AuthLoading extends AuthState {
 
 /// User logged in.
 class AuthLoaded extends AuthState {
-  final User user;
+  final User? user;
   const AuthLoaded(this.user);
 
   @override
