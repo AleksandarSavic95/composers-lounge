@@ -1,6 +1,8 @@
 import 'package:composers_lounge/core/route_names.dart';
 import 'package:composers_lounge/core/widgets/screen.dart';
+import 'package:composers_lounge/states/channels/channels_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChannelListScreen extends StatelessWidget {
   const ChannelListScreen({Key? key}) : super(key: key);
@@ -12,11 +14,32 @@ class ChannelListScreen extends StatelessWidget {
       title: 'My Channels',
       child: Column(
         children: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pushNamed(RouteNames.channel),
-            child: const Text('Channel'),
+          BlocBuilder<ChannelsCubit, ChannelsState>(
+            builder: (context, state) {
+              if (state is ChannelsError) {
+                return const Text('Channels not loaded..');
+              }
+              if (state is ChannelsLoaded) {
+                return Expanded(
+                  child: ListView(
+                    children: [
+                      for (var channel in state.channels)
+                        ListTile(
+                          title: Text(channel.name),
+                          subtitle: Text(channel.id),
+                          onTap: () => Navigator.of(context).pushNamed(
+                            RouteNames.channel,
+                            arguments: channel.id,
+                          ),
+                        )
+                    ],
+                  ),
+                );
+              }
+              // if (state is ChannelsLoading || state is ChannelsInitial)
+              return const CircularProgressIndicator();
+            },
           ),
-          // TODO - next: Read msgBus docs and create appropriate models and sevice methods
           TextButton(
             onPressed: () => Navigator.of(context).pushNamed(RouteNames.userProfile),
             child: const Text('My profile'),

@@ -1,11 +1,13 @@
 class User {
-  final String apiKey;
   final String username;
+  final String id;
+  final String? connectionToken;
   final String? photoUrl;
 
   User({
-    required this.apiKey,
     required this.username,
+    required this.id,
+    this.connectionToken,
     this.photoUrl,
   });
 }

@@ -7,11 +7,13 @@ abstract class AuthService {
 class AuthServiceMock extends AuthService {
   static Map db = {
     'Lizt': User(
-      apiKey: 'api_key_1',
+      id: 'u_1',
+      connectionToken: 'api_key_1',
       username: 'Lizt',
     ),
     'Beethoven': User(
-      apiKey: 'api_key_2',
+      id: 'u_2',
+      connectionToken: 'api_key_2',
       username: 'Beethoven',
     ),
   };

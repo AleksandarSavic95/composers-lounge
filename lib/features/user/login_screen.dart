@@ -1,7 +1,7 @@
 import 'package:composers_lounge/core/route_names.dart';
 import 'package:composers_lounge/core/widgets/screen.dart';
 import 'package:composers_lounge/states/auth/auth_cubit.dart';
-import 'package:composers_lounge/states/cubit/channels_cubit.dart';
+import 'package:composers_lounge/states/channels/channels_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             const Text(
               "Composer's Lounge 🎶",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
                 fontSize: 32,

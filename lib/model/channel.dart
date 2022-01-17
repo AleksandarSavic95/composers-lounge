@@ -1,11 +1,13 @@
+import 'message.dart';
+
 class Channel {
   final String name;
   final String id;
-  final int membersCount;
+  final List<Message> messages;
 
   Channel({
     required this.name,
     required this.id,
-    required this.membersCount,
+    this.messages = const [],
   });
 }
