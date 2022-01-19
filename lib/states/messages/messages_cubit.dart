@@ -20,7 +20,6 @@ class MessagesCubit extends Cubit<MessagesState> {
       emit(MessagesError(channelId));
       return;
     }
-    print(messages.length);
     emit(MessagesLoaded(
       messages: messages,
       channelId: channelId,
@@ -29,7 +28,6 @@ class MessagesCubit extends Cubit<MessagesState> {
 
   /// Update the state with a newly arrived message.
   void addMessage(Message message) {
-    print(state.messages.length);
     emit(MessagesLoaded(
       messages: [...state.messages, message],
       channelId: state.channelId!,
