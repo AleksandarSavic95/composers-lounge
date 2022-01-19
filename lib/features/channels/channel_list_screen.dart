@@ -1,6 +1,7 @@
 import 'package:composers_lounge/core/route_names.dart';
 import 'package:composers_lounge/core/widgets/screen.dart';
 import 'package:composers_lounge/states/channels/channels_cubit.dart';
+import 'package:composers_lounge/states/user_photo/user_photo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,6 +11,7 @@ class ChannelListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Screen(
+      onWillPop: () => false,
       isBackButtonHidden: true,
       title: 'My Channels',
       child: Column(
@@ -41,9 +43,15 @@ class ChannelListScreen extends StatelessWidget {
             },
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pushNamed(RouteNames.userProfile),
-            child: const Text('My profile'),
+            onPressed: () => Navigator.of(context)
+                .pushNamed(RouteNames.userProfile)
+                .then((_) => context.read<UserPhotoCubit>().reset()), // Reset state to show (mocked) uploaded photo
+            child: const Text(
+              'My profile',
+              style: TextStyle(fontSize: 32),
+            ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );

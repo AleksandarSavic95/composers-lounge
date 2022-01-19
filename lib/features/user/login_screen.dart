@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController(text: 'Lizt');
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 4),
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
-                if (state is AuthLoaded && state.user != null) {
+                if (state is AuthSuccessful && state.user != null) {
                   context.read<ChannelsCubit>().loadChannels(state.user!);
                   Navigator.of(context).pushNamed(RouteNames.channelList);
                 }
@@ -54,7 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   return const CircularProgressIndicator();
                 }
                 return TextButton(
-                  onPressed: () => context.read<AuthCubit>().login(usernameController.text),
+                  onPressed: () {
+                    FocusScope.of(context).unfocus(); // Hide the keyboard (which later shows up without invitation!)
+                    context.read<AuthCubit>().login(usernameController.text);
+                  },
                   child: const Text(
                     'Login',
                     style: TextStyle(fontSize: 24),

@@ -17,11 +17,23 @@ class AuthCubit extends Cubit<AuthState> {
       emit(const AuthError('Wrong username!'));
       return;
     }
-    emit(AuthLoaded(user));
+    emit(AuthSuccessful(user));
+  }
+
+  void setUserPhoto(String photoUrl) {
+    final User? user = state is AuthSuccessful
+        ? (state as AuthSuccessful).user
+        : state is AuthUpdated
+            ? (state as AuthUpdated).user
+            : null;
+    if (user == null) {
+      return;
+    }
+    emit(AuthUpdated(user.copyWith(photoUrl: photoUrl)));
   }
 
   void logOut() {
     // _authService.logOut((state as AuthLoaded).user); // ?
-    emit(const AuthLoaded(null));
+    emit(const AuthUpdated(null));
   }
 }

@@ -5,6 +5,7 @@ import 'package:composers_lounge/states/auth/auth_cubit.dart';
 import 'package:composers_lounge/core/routes_config.dart';
 import 'package:composers_lounge/states/channels/channels_cubit.dart';
 import 'package:composers_lounge/states/messages/messages_cubit.dart';
+import 'package:composers_lounge/states/user_photo/user_photo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => MessagesCubit(ChannelServiceMock()),
+        ),
+        BlocProvider(
+          create: (context) => UserPhotoCubit(AuthServiceMock()),
         ),
       ],
       child: MaterialApp(

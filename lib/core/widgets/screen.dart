@@ -5,6 +5,7 @@ class Screen extends StatelessWidget {
     required this.child,
     this.title,
     this.isBackButtonHidden = false,
+    this.onWillPop,
     Key? key,
   }) : super(key: key);
 
@@ -12,18 +13,24 @@ class Screen extends StatelessWidget {
   final String? title;
   final bool isBackButtonHidden;
 
+  /// A function to be called when trying to navigate to the previous screen. Must return true to allow navigation.
+  final bool Function()? onWillPop;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: title == null
-            ? null
-            : AppBar(
-                centerTitle: true,
-                title: Text(title!),
-                automaticallyImplyLeading: !isBackButtonHidden,
-              ),
-        body: child,
+      child: WillPopScope(
+        onWillPop: onWillPop == null ? null : () async => onWillPop!(),
+        child: Scaffold(
+          appBar: title == null
+              ? null
+              : AppBar(
+                  centerTitle: true,
+                  title: Text(title!),
+                  automaticallyImplyLeading: !isBackButtonHidden,
+                ),
+          body: child,
+        ),
       ),
     );
   }

@@ -16,14 +16,29 @@ class AuthLoading extends AuthState {
 }
 
 /// User logged in.
-class AuthLoaded extends AuthState {
+class AuthSuccessful extends AuthState {
   final User? user;
-  const AuthLoaded(this.user);
+  const AuthSuccessful(this.user);
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is AuthLoaded && other.user == user;
+    return other is AuthSuccessful && other.user == user;
+  }
+
+  @override
+  int get hashCode => user.hashCode;
+}
+
+/// New User info available.
+class AuthUpdated extends AuthState {
+  final User? user;
+  const AuthUpdated(this.user);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is AuthUpdated && other.user == user;
   }
 
   @override
