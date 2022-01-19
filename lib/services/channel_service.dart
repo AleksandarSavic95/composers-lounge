@@ -6,6 +6,7 @@ abstract class ChannelService {
   Future<List<Channel>?> loadChannels(User user);
   Future<List<Message>?> enterChannel(String channelId);
   Future<void> leaveChannel(String channelId);
+  Future<Message?> sendMessage(Message message, String channelId);
 }
 
 class ChannelServiceMock extends ChannelService {
@@ -50,6 +51,16 @@ class ChannelServiceMock extends ChannelService {
   Future<void> leaveChannel(String channelId) async {
     await Future.delayed(const Duration(seconds: 1));
     // Unsubscribe from channel..
+  }
+
+  @override
+  Future<Message?> sendMessage(Message message, String channelId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (messages.containsKey(channelId) == false) {
+      return null;
+    }
+    messages[channelId]!.add(message);
+    return message;
   }
 }
 

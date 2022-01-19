@@ -10,6 +10,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this._authService) : super(const AuthInitial());
 
+  User? get user => state is AuthSuccessful
+      ? (state as AuthSuccessful).user
+      : state is AuthUpdated
+          ? (state as AuthUpdated).user
+          : null;
+
   Future<void> login(String username) async {
     emit(const AuthLoading());
     final user = await _authService.login(username);
@@ -21,15 +27,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void setUserPhoto(String photoUrl) {
-    final User? user = state is AuthSuccessful
-        ? (state as AuthSuccessful).user
-        : state is AuthUpdated
-            ? (state as AuthUpdated).user
-            : null;
     if (user == null) {
       return;
     }
-    emit(AuthUpdated(user.copyWith(photoUrl: photoUrl)));
+    emit(AuthUpdated(user!.copyWith(photoUrl: photoUrl)));
   }
 
   void logOut() {

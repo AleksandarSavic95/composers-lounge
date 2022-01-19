@@ -82,7 +82,7 @@ class _PhotoInput extends StatelessWidget {
               if (authState is! AuthUpdated && authState is! AuthSuccessful) {
                 return const Text('Error while loading user profile');
               }
-              User? user = authState is AuthUpdated ? authState.user : (authState as AuthSuccessful).user;
+              User? user = context.read<AuthCubit>().user;
               if (user != null) {
                 return user.photoUrl != null
                     ? Image.network(user.photoUrl!)

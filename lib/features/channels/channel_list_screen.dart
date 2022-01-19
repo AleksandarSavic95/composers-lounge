@@ -39,7 +39,12 @@ class ChannelListScreen extends StatelessWidget {
                 );
               }
               // if (state is ChannelsLoading || state is ChannelsInitial)
-              return const CircularProgressIndicator();
+              return const Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: CircularProgressIndicator(),
+                ),
+              );
             },
           ),
           TextButton(

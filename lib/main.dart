@@ -5,6 +5,7 @@ import 'package:composers_lounge/states/auth/auth_cubit.dart';
 import 'package:composers_lounge/core/routes_config.dart';
 import 'package:composers_lounge/states/channels/channels_cubit.dart';
 import 'package:composers_lounge/states/messages/messages_cubit.dart';
+import 'package:composers_lounge/states/messaging/messaging_cubit.dart';
 import 'package:composers_lounge/states/user_photo/user_photo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,27 +19,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider(
-          create: (context) => AuthCubit(AuthServiceMock()),
+        RepositoryProvider<ChannelService>(
+          create: (context) => ChannelServiceMock(),
         ),
-        BlocProvider(
-          create: (context) => ChannelsCubit(ChannelServiceMock()),
-        ),
-        BlocProvider(
-          create: (context) => MessagesCubit(ChannelServiceMock()),
-        ),
-        BlocProvider(
-          create: (context) => UserPhotoCubit(AuthServiceMock()),
+        RepositoryProvider<AuthService>(
+          create: (context) => AuthServiceMock(),
         ),
       ],
-      child: MaterialApp(
-        routes: routesConfig,
-        initialRoute: RouteNames.login,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          textTheme: Typography.blackCupertino,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthCubit(context.read<AuthService>()),
+          ),
+          BlocProvider(
+            create: (context) => ChannelsCubit(context.read<ChannelService>()),
+          ),
+          BlocProvider(
+            create: (context) => MessagesCubit(context.read<ChannelService>()),
+          ),
+          BlocProvider(
+            create: (context) => MessagingCubit(context.read<ChannelService>()),
+          ),
+          BlocProvider(
+            create: (context) => UserPhotoCubit(context.read<AuthService>()),
+          ),
+        ],
+        child: MaterialApp(
+          routes: routesConfig,
+          initialRoute: RouteNames.login,
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            textTheme: Typography.blackCupertino,
+          ),
         ),
       ),
     );
