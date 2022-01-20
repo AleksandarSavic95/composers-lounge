@@ -12,14 +12,13 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 abstract class ChannelService {
   ChannelService();
+  Stream<MessageToClient> get messagesStream;
   Future<List<Channel>?> getChannels(User user);
-  Future<Stream<Message>> subscribeToMessages(String channelId);
+  Future<Stream<Message>> subscribeToTopic(String channelId);
   Future<String> subscribe(User user, List<Channel> channels);
   Future<List<Message>?> getMessages(String channelId);
   Future<void> leaveChannel(String channelId);
   Future<Message?> sendMessage(Message message, String channelId);
-  void addMessage(String topic, Message message);
-  Stream<MessageToClient> get messagesStream;
 }
 
 class ChannelServiceMock extends ChannelService {
@@ -40,9 +39,9 @@ class ChannelServiceMock extends ChannelService {
     ];
     server = ServerMock(channels);
     // Update messages in the db
-    // for (var channel in channels) {
-    //   server.messagesSteram(channel.id).listen(messages[channel.id]!.add);
-    // }
+    for (var channel in channels) {
+      server.messagesSteram(channel.id).listen(messages[channel.id]!.add);
+    }
   }
 
   late final List<Channel> channels;
@@ -57,13 +56,16 @@ class ChannelServiceMock extends ChannelService {
   };
 
   @override
+  Stream<MessageToClient> get messagesStream => _stream;
+
+  @override
   Future<List<Channel>?> getChannels(User user) async {
     await Future.delayed(const Duration(seconds: 2));
     return channels;
   }
 
   @override
-  Future<Stream<Message>> subscribeToMessages(String channelId) async {
+  Future<Stream<Message>> subscribeToTopic(String channelId) async {
     await Future.delayed(const Duration(seconds: 1));
     return server.messagesSteram(channelId);
   }
@@ -91,11 +93,17 @@ class ChannelServiceMock extends ChannelService {
     );
     _stream = _channel.stream.map((m) => MsgPacketToClient.fromJson(m).messages.first).asBroadcastStream();
 
+    // Only for mocked service - Update messages DB with the newly arrived message
+    _stream.listen((messageFromClient) {
+      addMessage(messageFromClient.topic, Message.fromMsgBusMessage(messageFromClient));
+    });
+
     return r.connectionToken.connectionToken;
   }
 
-  @override
-  Stream<MessageToClient> get messagesStream => _stream;
+  void addMessage(String topic, Message message) {
+    messages[topic]!.add(message);
+  }
 
   @override
   Future<List<Message>?> getMessages(String channelId) async {
@@ -119,11 +127,6 @@ class ChannelServiceMock extends ChannelService {
     //   { "from": message.sender.id, to: [ channelId ], "payload": message.content } // Add user avatar somewhere?
     messages[channelId]!.add(message);
     return message;
-  }
-
-  @override
-  void addMessage(String topic, Message message) {
-    messages[topic]!.add(message);
   }
 }
 

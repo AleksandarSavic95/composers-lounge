@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:composers_lounge/model/channel.dart';
-import 'package:composers_lounge/model/message.dart';
 import 'package:composers_lounge/model/user.dart';
 import 'package:composers_lounge/services/auth_service.dart';
 import 'package:composers_lounge/services/channel_service.dart';
@@ -13,7 +12,6 @@ part 'channels_state.dart';
 class ChannelListCubit extends Cubit<ChannelListState> {
   final ChannelService _channelService;
   final AuthService _authService;
-  StreamSubscription? _streamSubscription;
 
   ChannelListCubit(this._channelService, this._authService) : super(ChannelsInitial());
 
@@ -29,15 +27,5 @@ class ChannelListCubit extends Cubit<ChannelListState> {
 
     String connectionToken = await _channelService.subscribe(user, channels);
     _authService.updateConnectionToken(connectionToken);
-
-    _streamSubscription ??= _channelService.messagesStream.listen((messageFromClient) {
-      _channelService.addMessage(messageFromClient.topic, Message.fromMsgBusMessage(messageFromClient));
-    });
-  }
-
-  @override
-  Future<void> close() {
-    _streamSubscription?.cancel();
-    return super.close();
   }
 }

@@ -104,7 +104,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               BlocConsumer<MessagingCubit, MessagingState>(
                 listener: (context, state) {
                   if (state.isSending) {
-                    context.read<MessagesCubit>().addMessage(state.message!);
+                    context.read<MessagesCubit>().addMessageToState(state.message!);
                     _messageController.clear();
                     _scrollToBottom();
                   }

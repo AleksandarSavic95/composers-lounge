@@ -18,6 +18,7 @@ class MessagesCubit extends Cubit<MessagesState> {
   final String channelId;
 
   StreamSubscription<MessageToClient>? _streamSubscription;
+  // StreamSubscription<Message>? _streamSubscription; // Subscription to stream of mocked messages
 
   /// Load message history and subscribe to future messages (via MsgBus).
   void getMessages() async {
@@ -29,22 +30,22 @@ class MessagesCubit extends Cubit<MessagesState> {
       return;
     }
     emit(MessagesLoaded(
-      messages: messages,
+      messages: [...messages], // Copy array from mocked backend to prevent double addition of items
       channelId: channelId,
     ));
 
     _streamSubscription ??= _channelService.messagesStream.listen((messageFromClient) {
       if (messageFromClient.topic == channelId) {
-        addMessage(Message.fromMsgBusMessage(messageFromClient));
+        addMessageToState(Message.fromMsgBusMessage(messageFromClient));
       }
     });
 
-    // // Subscription to stream of mocked messages
-    // final messagesStream = await _channelService.subscribeToMessages(channelId);
+    // // Subscribe to stream of mocked messages
+    // final messagesStream = await _channelService.subscribeToTopic(channelId);
     // if (_streamSubscription == null) {
     //   _streamSubscription = messagesStream.listen((message) {
     //     print('new message in channel $channelId! ${message.content}');
-    //     addMessage(message);
+    //     addMessageToState(message);
     //   });
     // } else {
     //   _streamSubscription!.resume();
@@ -52,7 +53,7 @@ class MessagesCubit extends Cubit<MessagesState> {
   }
 
   /// Update the state with a newly arrived message.
-  void addMessage(Message message) {
+  void addMessageToState(Message message) {
     emit(MessagesLoaded(
       messages: [...state.messages, message],
       channelId: state.channelId!,
