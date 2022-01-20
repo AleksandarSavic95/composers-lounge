@@ -16,25 +16,26 @@ class ChannelListScreen extends StatelessWidget {
       title: 'My Channels',
       child: Column(
         children: [
-          BlocBuilder<ChannelsCubit, ChannelsState>(
+          BlocBuilder<ChannelListCubit, ChannelListState>(
             builder: (context, state) {
               if (state is ChannelsError) {
                 return const Text('Channels not loaded..');
               }
               if (state is ChannelsLoaded) {
                 return Expanded(
-                  child: ListView(
-                    children: [
-                      for (var channel in state.channels)
-                        ListTile(
-                          title: Text(channel.name),
-                          subtitle: Text(channel.id),
-                          onTap: () => Navigator.of(context).pushNamed(
-                            RouteNames.channel,
-                            arguments: channel.id,
-                          ),
-                        )
-                    ],
+                  child: ListView.builder(
+                    itemCount: state.channels.length,
+                    itemBuilder: (context, index) {
+                      final channel = state.channels[index];
+                      return ListTile(
+                        title: Text(channel.name),
+                        subtitle: Text(channel.id),
+                        onTap: () => Navigator.of(context).pushNamed(
+                          RouteNames.channel,
+                          arguments: channel.id,
+                        ),
+                      );
+                    },
                   ),
                 );
               }

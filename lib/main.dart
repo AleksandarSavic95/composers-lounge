@@ -4,7 +4,6 @@ import 'package:composers_lounge/services/channel_service.dart';
 import 'package:composers_lounge/states/auth/auth_cubit.dart';
 import 'package:composers_lounge/core/routes_config.dart';
 import 'package:composers_lounge/states/channels/channels_cubit.dart';
-import 'package:composers_lounge/states/messages/messages_cubit.dart';
 import 'package:composers_lounge/states/messaging/messaging_cubit.dart';
 import 'package:composers_lounge/states/user_photo/user_photo_cubit.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +33,10 @@ class MyApp extends StatelessWidget {
             create: (context) => AuthCubit(context.read<AuthService>()),
           ),
           BlocProvider(
-            create: (context) => ChannelsCubit(context.read<ChannelService>()),
-          ),
-          BlocProvider(
-            create: (context) => MessagesCubit(context.read<ChannelService>()),
+            create: (context) => ChannelListCubit(
+              context.read<ChannelService>(),
+              context.read<AuthService>(),
+            ),
           ),
           BlocProvider(
             create: (context) => MessagingCubit(context.read<ChannelService>()),

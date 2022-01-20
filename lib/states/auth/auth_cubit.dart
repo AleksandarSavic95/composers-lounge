@@ -37,4 +37,12 @@ class AuthCubit extends Cubit<AuthState> {
     // _authService.logOut((state as AuthLoaded).user); // ?
     emit(const AuthUpdated(null));
   }
+
+  void updateConnectionToken(String connectionToken) async {
+    User? updatedUser = await _authService.updateConnectionToken(connectionToken);
+    if (updatedUser == null) {
+      return;
+    }
+    emit(AuthUpdated(updatedUser));
+  }
 }

@@ -1,21 +1,21 @@
 part of 'channels_cubit.dart';
 
 @immutable
-abstract class ChannelsState {
-  const ChannelsState();
+abstract class ChannelListState {
+  const ChannelListState();
 }
 
-class ChannelsInitial extends ChannelsState {}
+class ChannelsInitial extends ChannelListState {}
 
-class ChannelsLoading extends ChannelsState {}
+class ChannelsLoading extends ChannelListState {}
 
-class ChannelsLoaded extends ChannelsState {
+class ChannelsLoaded extends ChannelListState {
   final List<Channel> channels;
 
   const ChannelsLoaded(this.channels);
 }
 
-class ChannelsError extends ChannelsState {
+class ChannelsError extends ChannelListState {
   final String message;
 
   const ChannelsError(this.message);

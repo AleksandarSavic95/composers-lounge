@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthSuccessful && state.user != null) {
-                  context.read<ChannelsCubit>().loadChannels(state.user!);
+                  context.read<ChannelListCubit>().loadChannels(state.user!);
                   Navigator.of(context).pushNamed(RouteNames.channelList);
                 }
                 if (state is AuthError) {
