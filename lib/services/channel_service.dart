@@ -34,9 +34,18 @@ class ChannelServiceMock extends ChannelService {
   @override
   Future<List<Channel>?> loadChannels(User user) async {
     await Future.delayed(const Duration(seconds: 2));
-    // if (user.connectionToken == null) {
-    //   return null;
-    // }
+    if (user.connectionToken == null) {
+      // Create connectionToken and subscribe the user to all of his channels
+      //   Backed should POST /connection/token (apikey in header)
+      // Update user in the app with the connectionToken (it should be saved in backend for next login)
+      // ---
+      // Use the connectionToken in the App to connect (i.e. subscribe) to MsgBus   @@ -- here or for every channel?
+
+      // Dio().post(
+      //   '/path',
+      //   options: Options(headers: {'apikey': 'secret_api_key'}),
+      // );
+    }
     return channels;
   }
 
@@ -44,6 +53,7 @@ class ChannelServiceMock extends ChannelService {
   Future<List<Message>?> enterChannel(String channelId) async {
     await Future.delayed(const Duration(seconds: 1));
     // Subscribe to channel - MsgBus API call
+    // Use the connectionToken in the App to connect (i.e. subscribe) to MsgBus     @@ -- here or for all channels?
     return messages[channelId];
   }
 
@@ -59,6 +69,8 @@ class ChannelServiceMock extends ChannelService {
     if (messages.containsKey(channelId) == false) {
       return null;
     }
+    // Backend should POST /publish (apikey in header)
+    //   { "from": message.sender.id, to: [ channelId ], "payload": message.content } // Add user avatar somewhere?
     messages[channelId]!.add(message);
     return message;
   }
